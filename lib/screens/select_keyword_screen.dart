@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'login_screen.dart';
 
 class SelectKeywordScreen extends StatefulWidget {
   const SelectKeywordScreen({super.key});
@@ -9,87 +10,39 @@ class SelectKeywordScreen extends StatefulWidget {
 
 class _SelectKeywordScreenState extends State<SelectKeywordScreen> {
   final List<Map<String, String>> categories = [
-    {'id': 'university', 'label': '대학'},
     {'id': 'education', 'label': '교육'},
-    {'id': 'it', 'label': 'IT'},
-    {'id': 'trip', 'label': '여행'},
-    {'id': 'development', 'label': '개발'},
-    {'id': 'architect', 'label': '건축'},
-    {'id': 'marketing', 'label': '마케팅'},
-    {'id': 'startup', 'label': '스타트업'},
-    {'id': 'career', 'label': '커리어'},
-    {'id': 'resume', 'label': '자기소개서'},
-    {'id': 'presentation', 'label': '발표'},
-    {'id': 'leadership', 'label': '리더십'},
-    {'id': 'cafe', 'label': '카페'},
-    {'id': 'food', 'label': '음식'},
-    {'id': 'plant', 'label': '식물'},
-    {'id': 'car', 'label': '차'},
-    {'id': 'drink', 'label': '음주'},
-    {'id': 'dance', 'label': '댄스'},
-    {'id': 'dessert', 'label': '간식'},
-    {'id': 'celeb', 'label': '연예'},
-    {'id': 'shopping', 'label': '쇼핑'},
-    {'id': 'book', 'label': '책'},
+    {'id': 'intern', 'label': '인턴십'},
+    {'id': 'job', 'label': '취업'},
     {'id': 'finance', 'label': '금융'},
-    {'id': 'beauty', 'label': '뷰티'},
-    {'id': 'hospital', 'label': '병원'},
-    {'id': 'appliance', 'label': '가전'},
-    {'id': 'health', 'label': '헬스'},
-    {'id': 'sport', 'label': '스포츠'},
-    {'id': 'yoga', 'label': '요가'},
-    {'id': 'hair', 'label': '헤어'},
-    {'id': 'cinema', 'label': '영화'},
-    {'id': 'animal', 'label': '동물'},
-    {'id': 'art', 'label': '미술'},
-    {'id': 'entertainment', 'label': '예능'},
-    {'id': 'museum', 'label': '박물관'},
-    {'id': 'music', 'label': '음악'},
-    {'id': 'photo', 'label': '사진'},
-    {'id': 'volunteering', 'label': '봉사'},
-    {'id': 'media', 'label': '방송'},
+    {'id': 'scholarship', 'label': '장학금'},
+    {'id': 'food', 'label': '음식'},
+    {'id': 'cafe', 'label': '카페'},
+    {'id': 'health', 'label': '건강'},
+    {'id': 'contest', 'label': '공모전'},
+    {'id': 'competition', 'label': '대회'},
+    {'id': 'trip', 'label': '여행'},
+    {'id': 'volunteer', 'label': '봉사'},
+    {'id': 'shopping', 'label': '쇼핑'},
+    {'id': 'youth_policy', 'label': '청년 정책'},
+    {'id': 'etc', 'label': '기타'},
   ];
 
   final Map<String, IconData> categoryIcons = {
-    'university': Icons.school,
     'education': Icons.menu_book,
-    'it': Icons.computer,
-    'trip': Icons.flight_takeoff,
-    'development': Icons.code,
-    'architect': Icons.architecture,
-    'marketing': Icons.campaign,
-    'startup': Icons.lightbulb,
-    'career': Icons.work,
-    'resume': Icons.description,
-    'presentation': Icons.present_to_all,
-    'leadership': Icons.groups,
-    'cafe': Icons.local_cafe,
-    'food': Icons.restaurant,
-    'plant': Icons.park,
-    'car': Icons.directions_car,
-    'drink': Icons.local_bar,
-    'dance': Icons.directions_run,
-    'dessert': Icons.icecream,
-    'celeb': Icons.star,
-    'shopping': Icons.shopping_bag,
-    'book': Icons.book,
+    'intern': Icons.business_center,
+    'job': Icons.work_outline,
     'finance': Icons.attach_money,
-    'beauty': Icons.brush,
-    'hospital': Icons.local_hospital,
-    'appliance': Icons.kitchen,
+    'scholarship': Icons.school,
+    'food': Icons.restaurant,
+    'cafe': Icons.local_cafe,
     'health': Icons.health_and_safety,
-    'sport': Icons.sports,
-    'yoga': Icons.self_improvement,
-    'hair': Icons.cut,
-    'cinema': Icons.movie,
-    'animal': Icons.pets,
-    'art': Icons.palette,
-    'entertainment': Icons.music_note,
-    'museum': Icons.museum,
-    'music': Icons.library_music,
-    'photo': Icons.camera_alt,
-    'volunteering': Icons.volunteer_activism,
-    'media': Icons.tv,
+    'contest': Icons.emoji_events,
+    'competition': Icons.emoji_events_outlined,
+    'trip': Icons.flight_takeoff,
+    'volunteer': Icons.volunteer_activism,
+    'shopping': Icons.shopping_bag,
+    'youth_policy': Icons.policy,
+    'etc': Icons.more_horiz,
   };
 
   final Set<String> selected = {};
@@ -189,7 +142,27 @@ class _SelectKeywordScreenState extends State<SelectKeywordScreen> {
               width: double.infinity,
               height: 48,
               child: ElevatedButton(
-                onPressed: _submit,
+                onPressed: () {
+                  if (selected.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('카테고리를 하나 이상 선택해주세요.')),
+                    );
+                    return;
+                  }
+
+                  // 스낵바로 가입 완료 안내
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('가입이 완료되었습니다!')),
+                  );
+
+                  // 1초 후 로그인 화면으로 이동
+                  Future.delayed(const Duration(seconds: 1), () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (_) => const LoginScreen()),
+                    );
+                  });
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF377639),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),

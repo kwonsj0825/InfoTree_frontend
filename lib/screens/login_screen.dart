@@ -1,8 +1,39 @@
 import 'package:flutter/material.dart';
 import 'signup_screen.dart';
+import 'main_screen.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  void _tryLogin() {
+    final id = _emailController.text.trim();
+    final pw = _passwordController.text.trim();
+
+    if (id.isEmpty || pw.isEmpty) {
+      _showSnackBar("아이디와 비밀번호를 모두 입력하세요.");
+    } else if (id == "infotree" && pw == "info1234") {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => MainScreen()),
+      );
+    } else {
+      _showSnackBar("아이디 또는 비밀번호가 올바르지 않습니다.");
+    }
+  }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,8 +45,7 @@ class LoginScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 100.0,),
-              // 앱 이름
+              const SizedBox(height: 100.0),
               Text(
                 'InfoTree',
                 style: TextStyle(
@@ -25,7 +55,6 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              // 설명 텍스트
               Text(
                 '학생 혜택 정보를 한눈에!',
                 style: TextStyle(
@@ -37,25 +66,18 @@ class LoginScreen extends StatelessWidget {
 
               // 이메일 입력
               TextFormField(
+                controller: _emailController,
                 decoration: InputDecoration(
                   hintText: '이메일',
-                  prefixIcon: const Icon(
-                    Icons.email_outlined,
-                    color: Color(0xFF876B55),
-                  ),
+                  prefixIcon: const Icon(Icons.email_outlined, color: Color(0xFF876B55)),
                   contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide(
-                      color: Color(0xFF876B55),
-                    ),
+                    borderSide: const BorderSide(color: Color(0xFF876B55)),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide(
-                      color: Color(0xFF62462B),
-                      width: 2.0,
-                    )
+                    borderSide: const BorderSide(color: Color(0xFF62462B), width: 2.0),
                   ),
                 ),
               ),
@@ -63,31 +85,21 @@ class LoginScreen extends StatelessWidget {
 
               // 비밀번호 입력
               TextFormField(
+                controller: _passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   hintText: '비밀번호',
-                  prefixIcon: const Icon(
-                    Icons.lock_outline,
-                    color: Color(0xFF876B55),
-                  ),
-                  suffixIcon: const Icon(
-                    Icons.visibility_off,
-                    color: Color(0xFF876B55),
-                  ),
+                  prefixIcon: const Icon(Icons.lock_outline, color: Color(0xFF876B55)),
+                  suffixIcon: const Icon(Icons.visibility_off, color: Color(0xFF876B55)),
                   contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide(
-                      color: Color(0xFF876B55)
-                    )
+                    borderSide: const BorderSide(color: Color(0xFF876B55)),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide(
-                      color: Color(0xFF62462B),
-                      width: 2.0,
-                    )
-                  )
+                    borderSide: const BorderSide(color: Color(0xFF62462B), width: 2.0),
+                  ),
                 ),
               ),
               const SizedBox(height: 30),
@@ -98,11 +110,9 @@ class LoginScreen extends StatelessWidget {
                   width: 230.0,
                   height: 50,
                   child: ElevatedButton(
-                    onPressed: () {
-                      // 로그인 동작
-                    },
+                    onPressed: _tryLogin,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF377639),
+                      backgroundColor: const Color(0xFF377639),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
@@ -110,17 +120,14 @@ class LoginScreen extends StatelessWidget {
                     ),
                     child: const Text(
                       '로그인',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                      ),
+                      style: TextStyle(fontSize: 16, color: Colors.white),
                     ),
                   ),
                 ),
               ),
               const SizedBox(height: 24),
 
-              // 회원가입 텍스트 버튼
+              // 회원가입 이동
               Center(
                 child: TextButton(
                   onPressed: () {
@@ -129,15 +136,6 @@ class LoginScreen extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => const SignUpScreen()),
                     );
                   },
-                  style: ButtonStyle(
-                    overlayColor: WidgetStateProperty.resolveWith<Color?>(
-                        (Set<WidgetState> states) {
-                          if (states.contains(WidgetState.pressed)) {
-                            return Color(0x99F6F1E9);
-                          }
-                        }
-                    )
-                  ),
                   child: const Text(
                     '계정이 없으신가요? 회원가입',
                     style: TextStyle(color: Color(0xFF876B55)),
@@ -145,21 +143,12 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
 
-              // 관리자 로그인 버튼
+              // 관리자용
               Center(
                 child: TextButton(
                   onPressed: () {
-                    // 관리자 웹 로그인 이동
+                    // 관리자 동작
                   },
-                  style: ButtonStyle(
-                      overlayColor: WidgetStateProperty.resolveWith<Color?>(
-                              (Set<WidgetState> states) {
-                            if (states.contains(WidgetState.pressed)) {
-                              return Color(0x99F6F1E9);
-                            }
-                          }
-                      )
-                  ),
                   child: const Text(
                     '구독 채널 관리자는 여기를 클릭',
                     style: TextStyle(color: Color(0xFF876B55)),
