@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
+import 'benefit_map_screen.dart';
 import 'mypage_screen.dart';
+import '../models/benefit.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -12,8 +14,8 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 2; // 홈 탭이 기본
 
-  final List<Widget> _screens = const [
-    Placeholder(), // 지도
+  final List<Widget> _screens = [
+    BenefitMapScreen(benefits: dummyBenefits), // 지도
     Placeholder(), // 내 혜택
     HomeScreen(),
     Placeholder(), // 내 구독

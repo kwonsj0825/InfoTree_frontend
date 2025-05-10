@@ -22,34 +22,18 @@ class User {
     required this.likes,
     required this.password,
   });
-
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
-      id: json['id'],
-      name: json['name'],
-      school: json['school'],
-      email: json['email'],
-      phone: json['phone'],
-      major: List<String>.from(json['major'] ?? []),
-      channel: List<int>.from(json['channel'] ?? []),
-      keywords: List<String>.from(json['keywords'] ?? []),
-      likes: List<int>.from(json['likes'] ?? []),
-      password: json['password'] ?? '', // password는 nullable 처리 가능
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'school': school,
-      'email': email,
-      'phone': phone,
-      'major': major,
-      'channel': channel,
-      'keywords': keywords,
-      'likes': likes,
-      'password': password,
-    };
-  }
 }
+
+// 예시 사용자 - 어디서든 import해서 사용 가능
+User dummyUser = User(
+  id: 1,
+  name: '홍길동',
+  school: '동국대학교',
+  email: 'hong@example.com',
+  phone: '010-1234-5678',
+  major: ['컴퓨터공학'],
+  channel: [],
+  keywords: [],
+  likes: [],
+  password: 'pass1234',
+);

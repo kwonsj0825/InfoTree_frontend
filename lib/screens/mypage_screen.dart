@@ -3,7 +3,7 @@ import 'review_list_screen.dart';
 import 'change_password_screen.dart';
 import 'edit_profile_screen.dart';
 import '../models/review_target.dart';
-import '../main.dart';
+import '../models/user.dart';
 
 class MyPageScreen extends StatelessWidget {
   const MyPageScreen({super.key});

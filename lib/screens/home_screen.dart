@@ -23,61 +23,6 @@ class _HomeScreenState extends State<HomeScreen> {
     'assets/sample3.jpg',
   ];
 
-  // 실제로는 서버에서 받아오는 리스트
-  final List<Benefit> allBenefits = [
-    Benefit(
-      id: 1,
-      title: '조기 마감 할인',
-      startDate: DateTime(2025, 5, 1),
-      endDate: DateTime(2025, 5, 14),
-      description: '3일 이내 종료되는 인기 혜택',
-      ownerId: 1,
-      isPrivate: false,
-      categories: ['education'],
-      likes: 0,
-    ),
-    Benefit(
-      id: 2,
-      title: '학생 한정 이벤트',
-      startDate: DateTime(2025, 5, 2),
-      endDate: DateTime(2025, 5, 12),
-      description: '대학생만 참여 가능! 오늘만!',
-      ownerId: 1,
-      isPrivate: false,
-      categories: ['finance'],
-      likes: 0,
-    ),
-    Benefit(
-      id: 3,
-      title: '스타벅스',
-      startDate: DateTime(2025, 5, 3),
-      endDate: DateTime(2025, 5, 11),
-      description: '아메리카노 10% 할인',
-      ownerId: 1,
-      isPrivate: false,
-      categories: ['cafe'],
-      likes: 0,
-    ),
-  ];
-
-  final List<Category> categories = [
-    Category(id: 'education', label: '교육', icon: Icons.menu_book),
-    Category(id: 'intern', label: '인턴십', icon: Icons.business_center),
-    Category(id: 'job', label: '취업', icon: Icons.work_outline),
-    Category(id: 'finance', label: '금융', icon: Icons.attach_money),
-    Category(id: 'scholarship', label: '장학금', icon: Icons.school),
-    Category(id: 'food', label: '음식', icon: Icons.restaurant),
-    Category(id: 'cafe', label: '카페', icon: Icons.local_cafe),
-    Category(id: 'health', label: '건강', icon: Icons.health_and_safety),
-    Category(id: 'contest', label: '공모전', icon: Icons.emoji_events),
-    Category(id: 'competition', label: '대회', icon: Icons.emoji_events_outlined),
-    Category(id: 'trip', label: '여행', icon: Icons.flight_takeoff),
-    Category(id: 'volunteer', label: '봉사', icon: Icons.volunteer_activism),
-    Category(id: 'shopping', label: '쇼핑', icon: Icons.shopping_bag),
-    Category(id: 'youth_policy', label: '청년 정책', icon: Icons.policy),
-    Category(id: 'etc', label: '기타', icon: Icons.more_horiz),
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -103,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Benefit> soonExpiring = allBenefits.where((b) {
+    final List<Benefit> soonExpiring = dummyBenefits.where((b) {
       final today = DateTime.now();
       final todayDateOnly = DateTime(today.year, today.month, today.day);
       final diff = b.endDate.difference(todayDateOnly).inDays;
@@ -155,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               MaterialPageRoute(
                                 builder: (_) => SearchResultScreen(
                                   query: value,
-                                  allBenefits: allBenefits,
+                                  allBenefits: dummyBenefits,
                                 ),
                               ),
                             );
@@ -242,9 +187,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (_) => CategoryBenefitListScreen(
-                            categoryId: cat.id,
-                            title: cat.label,
-                            allBenefits: allBenefits,
+                          categoryId: cat.id,
+                          title: cat.label,
+                          allBenefits: dummyBenefits,
                         ),
                       ),
                     );

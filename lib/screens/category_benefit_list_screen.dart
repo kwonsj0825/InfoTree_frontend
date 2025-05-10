@@ -21,7 +21,7 @@ class CategoryBenefitListScreen extends StatelessWidget {
 
     final validBenefits = allBenefits.where((b) =>
     b.categories.contains(categoryId) &&
-        !b.endDate.isBefore(todayOnly) // ✅ D-DAY 포함
+        !b.endDate.isBefore(todayOnly)
     ).toList();
 
     return Scaffold(
@@ -84,7 +84,7 @@ class CategoryBenefitListScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const Icon(Icons.chevron_right, color: Color(0xFF62462B)), // ✅ 오른쪽 > 아이콘
+                    const Icon(Icons.chevron_right, color: Color(0xFF62462B)),
                   ],
                 ),
               ),
