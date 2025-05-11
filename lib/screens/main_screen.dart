@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'benefit_map_screen.dart';
+import 'recommend_screen.dart';
 import 'mypage_screen.dart';
 import '../models/benefit.dart';
 
@@ -16,10 +17,10 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> _screens = [
     BenefitMapScreen(benefits: dummyBenefits), // 지도
-    Placeholder(), // 내 혜택
-    HomeScreen(),
+    RecommendScreen(), // 내 혜택
+    HomeScreen(),  // 홈
     Placeholder(), // 내 구독
-    MyPageScreen(),
+    MyPageScreen(), // 마이
   ];
 
   @override

@@ -112,7 +112,14 @@ class _BenefitMapScreenState extends State<BenefitMapScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('혜택 위치 보기', style: TextStyle(color: Color(0xFF62462B))),
+        title: const Text(
+            '혜택 위치 보기',
+            style: TextStyle(
+              color: Color(0xFF62462B),
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            )
+        ),
         backgroundColor: Colors.white,
       ),
       body: Stack(
