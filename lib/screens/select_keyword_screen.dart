@@ -113,11 +113,12 @@ class _SelectKeywordScreenState extends State<SelectKeywordScreen> {
                     const SnackBar(content: Text('가입이 완료되었습니다!')),
                   );
 
-                  // 1초 후 로그인 화면으로 이동
+                  // 1초 후 로그인 화면으로 이동 (스택 완전 초기화)
                   Future.delayed(const Duration(seconds: 1), () {
-                    Navigator.pushReplacement(
+                    Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(builder: (_) => const LoginScreen()),
+                          (Route<dynamic> route) => false,
                     );
                   });
                 },
