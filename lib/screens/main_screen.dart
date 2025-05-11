@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'benefit_map_screen.dart';
 import 'recommend_screen.dart';
+import 'likes_screen.dart';
 import 'mypage_screen.dart';
 import '../models/benefit.dart';
 
@@ -19,7 +20,7 @@ class _MainScreenState extends State<MainScreen> {
     BenefitMapScreen(benefits: dummyBenefits), // 지도
     RecommendScreen(), // 내 혜택
     HomeScreen(),  // 홈
-    Placeholder(), // 내 구독
+    LikesScreen(allBenefits: dummyBenefits), // 좋아요
     MyPageScreen(), // 마이
   ];
 

@@ -149,8 +149,9 @@ class _BenefitMapScreenState extends State<BenefitMapScreen> {
                   margin: const EdgeInsets.all(16),
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Color(0xFFF6F1E9),
                     borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: const Color(0xFFB3926B)),
                     boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 8)],
                   ),
                   child: Row(
@@ -172,7 +173,7 @@ class _BenefitMapScreenState extends State<BenefitMapScreen> {
                           children: [
                             Text(
                               _selectedBenefit!.title,
-                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF62462B)),
                             ),
                             const SizedBox(height: 4),
                             Text(
@@ -182,7 +183,7 @@ class _BenefitMapScreenState extends State<BenefitMapScreen> {
                           ],
                         ),
                       ),
-                      const Icon(Icons.chevron_right),
+                      const Icon(Icons.chevron_right, color: Color(0xFF62462B)),
                     ],
                   ),
                 ),

@@ -62,6 +62,7 @@ final List<Benefit> dummyBenefits = [
     ownerId: 1,
     isPrivate: false,
     categories: ['education'],
+    channelId: 1,
     likes: 0,
     latitude: 37.5665,
     longitude: 126.9780,
@@ -75,6 +76,7 @@ final List<Benefit> dummyBenefits = [
     ownerId: 1,
     isPrivate: false,
     categories: ['finance'],
+    channelId: 2,
     likes: 0,
   ),
   Benefit(
@@ -86,6 +88,7 @@ final List<Benefit> dummyBenefits = [
     ownerId: 1,
     isPrivate: false,
     categories: ['cafe'],
+    channelId: 2,
     likes: 0,
   ),
 ];

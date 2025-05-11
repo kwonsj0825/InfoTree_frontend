@@ -34,6 +34,6 @@ User dummyUser = User(
   major: ['컴퓨터공학'],
   channel: [],
   keywords: [],
-  likes: [],
+  likes: [1, 3],
   password: 'pass1234',
 );
