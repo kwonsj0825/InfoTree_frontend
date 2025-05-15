@@ -3,6 +3,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:geolocator/geolocator.dart';
+
 import '../models/benefit.dart';
 import '../models/category.dart';
 import 'benefit_detail_screen.dart';
@@ -17,13 +19,46 @@ class BenefitMapScreen extends StatefulWidget {
 }
 
 class _BenefitMapScreenState extends State<BenefitMapScreen> {
+  final MapController _mapController = MapController();
+
   Benefit? _selectedBenefit;
   final Map<String, ui.Image> _categoryTextIcons = {};
+  LatLng? _currentPosition;
 
   @override
   void initState() {
     super.initState();
     _generateCategoryIcons();
+    _determinePosition();
+  }
+
+  @override
+  void dispose() {
+    _mapController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _determinePosition() async {
+    final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) return;
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+    if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+      return;
+    }
+
+    final position = await Geolocator.getCurrentPosition();
+    final latLng = LatLng(position.latitude, position.longitude);
+
+    setState(() {
+      _currentPosition = latLng;
+    });
+
+    // 현재 위치로 지도 이동
+    _mapController.move(latLng, 15);
   }
 
   Future<void> _generateCategoryIcons() async {
@@ -90,21 +125,80 @@ class _BenefitMapScreenState extends State<BenefitMapScreen> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    if (validBenefits.isEmpty) {
-      return const Scaffold(body: Center(child: Text('지도에 표시할 위치 정보가 없습니다.')));
-    }
+    final allMarkers = <Marker>[
+      // 혜택 마커
+      ...validBenefits.map((b) {
+        final categoryId = b.categories.isNotEmpty ? b.categories.first : 'etc';
+        final iconData = categories.firstWhere(
+              (c) => c.id == categoryId,
+          orElse: () => categories.last,
+        ).icon;
+
+        return Marker(
+          point: LatLng(b.latitude!, b.longitude!),
+          width: 45,
+          height: 45,
+          child: GestureDetector(
+            onTap: () {
+              setState(() => _selectedBenefit = b);
+            },
+            child: Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white,
+                border: Border.all(color: const Color(0xFFB3926B), width: 1),
+                boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 1)],
+              ),
+              child: Center(
+                child: Icon(
+                  iconData,
+                  color: const Color(0xFF62462B),
+                  size: 20,
+                ),
+              ),
+            ),
+          ),
+        );
+      }),
+
+      // 현재 위치 마커
+      if (_currentPosition != null)
+        Marker(
+          point: _currentPosition!,
+          width: 50,
+          height: 50,
+          child: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white.withOpacity(0.8),
+              border: Border.all(color: Color(0xFF62462B), width: 3),
+            ),
+            child: const Center(
+              child: Icon(Icons.my_location, color: Color(0xFF62462B), size: 28),
+            ),
+          ),
+        ),
+    ];
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('혜택 위치 보기',
-            style: TextStyle(color: Color(0xFF62462B), fontSize: 22, fontWeight: FontWeight.bold)),
+        title: const Text(
+          '혜택 위치 보기',
+          style: TextStyle(color: Color(0xFF62462B), fontSize: 22, fontWeight: FontWeight.bold),
+        ),
         backgroundColor: Colors.white,
       ),
       body: Stack(
         children: [
           FlutterMap(
+            mapController: _mapController,
             options: MapOptions(
-              center: LatLng(validBenefits[0].latitude!, validBenefits[0].longitude!),
+              center: _currentPosition ??
+                  (validBenefits.isNotEmpty
+                      ? LatLng(validBenefits[0].latitude!, validBenefits[0].longitude!)
+                      : LatLng(37.5665, 126.9780)),
               zoom: 13,
               onTap: (_, __) => setState(() => _selectedBenefit = null),
             ),
@@ -113,43 +207,7 @@ class _BenefitMapScreenState extends State<BenefitMapScreen> {
                 urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                 subdomains: ['a', 'b', 'c'],
               ),
-              MarkerLayer(
-                markers: validBenefits.map((b) {
-                  final categoryId = b.categories.isNotEmpty ? b.categories.first : 'etc';
-                  final iconData = categories.firstWhere(
-                        (c) => c.id == categoryId,
-                    orElse: () => categories.last,
-                  ).icon;
-
-                  return Marker(
-                    point: LatLng(b.latitude!, b.longitude!),
-                    width: 45,
-                    height: 45,
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() => _selectedBenefit = b);
-                      },
-                      child: Container(
-                        width: 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white,
-                          border: Border.all(color: Color(0xFFB3926B), width: 1),
-                          boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 1)],
-                        ),
-                        child: Center(
-                          child: Icon(
-                            iconData,
-                            color: Color(0xFF62462B),
-                            size: 20,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
+              MarkerLayer(markers: allMarkers),
             ],
           ),
           if (_selectedBenefit != null)
@@ -191,11 +249,15 @@ class _BenefitMapScreenState extends State<BenefitMapScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(_selectedBenefit!.title,
-                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF62462B))),
+                            Text(
+                              _selectedBenefit!.title,
+                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF62462B)),
+                            ),
                             const SizedBox(height: 4),
-                            Text(_selectedBenefit!.description,
-                                style: const TextStyle(fontSize: 13, color: Colors.grey)),
+                            Text(
+                              _selectedBenefit!.description,
+                              style: const TextStyle(fontSize: 13, color: Colors.grey),
+                            ),
                           ],
                         ),
                       ),
